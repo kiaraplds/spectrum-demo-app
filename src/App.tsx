@@ -23,7 +23,8 @@ import {
   DatePicker,
   Avatar,
   Well,
-  InlineAlert
+  InlineAlert,
+  ToggleButton
 } from '@adobe/react-spectrum'
 import { parseDate } from '@internationalized/date'
 import { useState } from 'react'
@@ -34,6 +35,7 @@ export default function App() {
   const [checked, setChecked] = useState(false)
   const [switched, setSwitched] = useState(false)
   const [active, setActive] = useState('Buttons')
+  const [isDark, setIsDark] = useState(false)
 
   const scrollTo = (id: string) => {
     setActive(id)
@@ -41,12 +43,34 @@ export default function App() {
   }
 
   return (
-    <Provider theme={defaultTheme} colorScheme="light">
+    <Provider theme={defaultTheme} colorScheme={isDark ? 'dark' : 'light'}>
       <View
         backgroundColor="gray-50"
         minHeight="100vh"
         width="100%"
         UNSAFE_style={{ margin: 0, padding: 0 }}>
+
+        {/* Top header bar with dark/light mode toggle */}
+        <View
+          backgroundColor="gray-100"
+          borderBottomWidth="thin"
+          borderBottomColor="gray-300"
+          paddingX="size-300"
+          paddingY="size-150"
+          UNSAFE_style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Heading level={3} margin="size-0">React Spectrum Demo</Heading>
+            <Flex alignItems="center" gap="size-150">
+              <Text>{isDark ? '🌙 Dark' : '☀️ Light'}</Text>
+              <ToggleButton
+                isSelected={isDark}
+                onChange={setIsDark}
+                aria-label="Toggle dark mode">
+                {isDark ? 'Switch to Light' : 'Switch to Dark'}
+              </ToggleButton>
+            </Flex>
+          </Flex>
+        </View>
 
         <Flex width="100%" UNSAFE_style={{ position: 'relative', alignItems: 'flex-start' }}>
 
@@ -57,8 +81,8 @@ export default function App() {
               width: '220px',
               flexShrink: 0,
               position: 'sticky',
-              top: 0,
-              height: '100vh',
+              top: 56,
+              height: 'calc(100vh - 56px)',
               overflowY: 'auto',
               zIndex: 2,
               boxSizing: 'border-box'
