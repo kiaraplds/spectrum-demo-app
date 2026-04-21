@@ -34,6 +34,7 @@ export default function App() {
   const [checked, setChecked] = useState(false)
   const [switched, setSwitched] = useState(false)
   const [active, setActive] = useState('Buttons')
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light')
 
   const scrollTo = (id: string) => {
     setActive(id)
@@ -41,12 +42,34 @@ export default function App() {
   }
 
   return (
-    <Provider theme={defaultTheme} colorScheme="light">
+    <Provider theme={defaultTheme} colorScheme={colorScheme}>
       <View
         backgroundColor="gray-50"
         minHeight="100vh"
         width="100%"
         UNSAFE_style={{ margin: 0, padding: 0 }}>
+
+        {/* Top header bar with dark/light mode toggle */}
+        <View
+          backgroundColor="gray-100"
+          borderBottomWidth="thin"
+          borderBottomColor="gray-300"
+          paddingX="size-300"
+          paddingY="size-100"
+          UNSAFE_style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Heading level={3} margin="size-0">React Spectrum Demo</Heading>
+            <Flex alignItems="center" gap="size-150">
+              <Text>{colorScheme === 'light' ? '☀️ Light' : '🌙 Dark'}</Text>
+              <Switch
+                isSelected={colorScheme === 'dark'}
+                onChange={isDark => setColorScheme(isDark ? 'dark' : 'light')}
+                aria-label="Toggle dark mode">
+                Dark mode
+              </Switch>
+            </Flex>
+          </Flex>
+        </View>
 
         <Flex width="100%" UNSAFE_style={{ position: 'relative', alignItems: 'flex-start' }}>
 
@@ -57,8 +80,8 @@ export default function App() {
               width: '220px',
               flexShrink: 0,
               position: 'sticky',
-              top: 0,
-              height: '100vh',
+              top: '57px',
+              height: 'calc(100vh - 57px)',
               overflowY: 'auto',
               zIndex: 2,
               boxSizing: 'border-box'
@@ -85,8 +108,12 @@ export default function App() {
                   marginBottom: 4,
                   padding: '8px 12px',
                   borderRadius: 4,
-                  color: active === item ? '#0265dc' : '#444',
-                  background: active === item ? '#e8f0fb' : 'transparent',
+                  color: active === item
+                    ? (colorScheme === 'dark' ? '#4b9cf5' : '#0265dc')
+                    : (colorScheme === 'dark' ? '#ccc' : '#444'),
+                  background: active === item
+                    ? (colorScheme === 'dark' ? '#1a3a5c' : '#e8f0fb')
+                    : 'transparent',
                   fontWeight: active === item ? 600 : 400,
                   transition: 'background 0.15s, color 0.15s',
                   outline: 'none'
